@@ -7,8 +7,6 @@ exports.getIncome = async (req, res) => {
 };
 
 exports.postIncome = async (req, res) => {
-	const { description, amount } = req.body;
-
 	const newData = await prisma.incomes.create({ data: req.body });
 	return res.json(newData);
 };
@@ -39,6 +37,34 @@ exports.deleteIncome = async (req, res) => {
 		const remainUser = await prisma.incomes.findMany();
 		console.log(remainUser);
 		return res.json({ deletedUser: deletedUser, remainUser: remainUser });
+	} catch (error) {
+		return res.json(error);
+	}
+};
+
+exports.getOneIncome = async (req, res) => {
+	const id = req.params.id * 1;
+	try {
+		const getOneIncome = await prisma.incomes.findUnique({
+			where: {
+				id,
+			},
+		});
+		return res.json(getOneIncome);
+	} catch (error) {
+		return res.json(error);
+	}
+};
+
+exports.searchIncome = async (req, res) => {
+	const { query } = req.body;
+	try {
+		const searchIncome = await prisma.incomes.findMany({
+			where: {
+				description: { contains: query },
+			},
+		});
+		return res.json(searchIncome);
 	} catch (error) {
 		return res.json(error);
 	}

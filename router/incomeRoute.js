@@ -4,6 +4,8 @@ const {
 	getIncome,
 	putIncome,
 	deleteIncome,
+	getOneIncome,
+	searchIncome,
 } = require("../controllers/incomeControllers");
 
 // router.get("/", getIncome);
@@ -12,6 +14,7 @@ const {
 // router.delete("/:id", deleteIncome);
 
 router.route("/").get(getIncome).post(postIncome);
-router.route("/:id").put(putIncome).delete(deleteIncome);
+router.route("/:id").put(putIncome).delete(deleteIncome).get(getOneIncome);
+router.route("/search").post(searchIncome);
 
 module.exports = router;
