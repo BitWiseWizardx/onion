@@ -5,6 +5,6 @@ const signInRoute = require("./signInRoute");
 
 router.use("/income", incomeRoute);
 router.use("/expense", expenseRoute);
-router.use("/admin", signInRoute);
+router.use("/user", signInRoute);
 
 module.exports = router;

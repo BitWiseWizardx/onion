@@ -4,15 +4,8 @@ const crypto = require("crypto");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 
-// exports.signIn = async (req, res) => {
-// 	const { name, email, password } = req.body;
-// 	const data = await prisma.admin.create({
-// 		data: req.body,
-// 	});
-// 	return res.json(data);
-// };
 exports.getRegister = async (req, res) => {
-	const registerData = await prisma.admin.findMany();
+	const registerData = await prisma.users.findMany();
 	return res.json(registerData);
 };
 
@@ -21,7 +14,7 @@ exports.createRegister = async (req, res) => {
 		const saltRounds = 10;
 		const { name, email, password } = req.body;
 		const hashedPassword = await bcrypt.hash(password, saltRounds);
-		const createdRegister = await prisma.admin.create({
+		const createdRegister = await prisma.users.create({
 			data: { name, email, password: hashedPassword },
 		});
 		const token = jwt.sign({ email }, process.env.TOKEN_SECRET);
@@ -38,7 +31,7 @@ exports.createRegister = async (req, res) => {
 exports.getLogin = async (req, res) => {
 	try {
 		const { email, password } = req.body;
-		const loginUser = await prisma.admin.findFirst({
+		const loginUser = await prisma.users.findFirst({
 			where: {
 				email,
 			},

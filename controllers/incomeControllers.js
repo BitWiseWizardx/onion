@@ -7,8 +7,17 @@ exports.getIncome = async (req, res) => {
 };
 
 exports.postIncome = async (req, res) => {
-	const newData = await prisma.incomes.create({ data: req.body });
-	return res.json(newData);
+	try {
+		const data = {
+			user_id: 1,
+			description: req.body.description,
+			amount: req.body.amount,
+		};
+		const newData = await prisma.incomes.create({ data: data });
+		return res.json(newData);
+	} catch (error) {
+		return res.json(error);
+	}
 };
 
 exports.putIncome = async (req, res) => {
