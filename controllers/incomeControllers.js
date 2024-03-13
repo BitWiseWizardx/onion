@@ -6,10 +6,19 @@ exports.getIncome = async (req, res) => {
 	return res.json(newIncome);
 };
 
+exports.getIncome = async (req, res) => {
+	const newIncome = await prisma.incomes.findUnique({
+		where: {
+			user_id: req.body.user_id,
+		},
+	});
+	return res.json(newIncome);
+};
+
 exports.postIncome = async (req, res) => {
 	try {
 		const data = {
-			user_id: 1,
+			user_id: req.body.user_id,
 			description: req.body.description,
 			amount: req.body.amount,
 		};

@@ -17,10 +17,11 @@ exports.createRegister = async (req, res) => {
 		const createdRegister = await prisma.users.create({
 			data: { name, email, password: hashedPassword },
 		});
-		const token = jwt.sign(
-			{ id: createdRegister.id },
-			process.env.TOKEN_SECRET
-		);
+
+		const payload = {
+			id: createdRegister.id,
+		};
+		const token = jwt.sign({ payload }, process.env.TOKEN_SECRET);
 		return res.json({
 			message: "Data retrieved successfully",
 			createdRegister,
@@ -34,7 +35,7 @@ exports.createRegister = async (req, res) => {
 exports.getLogin = async (req, res) => {
 	try {
 		const { email, password } = req.body;
-		const loginUser = await prisma.users.findFirst({
+		const loginUser = await prisma.users.findUnique({
 			where: {
 				email,
 			},
@@ -58,7 +59,13 @@ exports.getLogin = async (req, res) => {
 };
 
 exports.protectedRoute = async (req, res) => {
-	res.json();
+	const id = req.body.id;
+	const user = await prisma.admin.findUnique({
+		where: {
+			id,
+		},
+	});
+	return res.json({ msg: "success", user });
 };
 
 // Generate a random 256-bit (32-byte) key
