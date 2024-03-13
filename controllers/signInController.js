@@ -17,7 +17,10 @@ exports.createRegister = async (req, res) => {
 		const createdRegister = await prisma.users.create({
 			data: { name, email, password: hashedPassword },
 		});
-		const token = jwt.sign({ email }, process.env.TOKEN_SECRET);
+		const token = jwt.sign(
+			{ id: createdRegister.id },
+			process.env.TOKEN_SECRET
+		);
 		return res.json({
 			message: "Data retrieved successfully",
 			createdRegister,
@@ -42,10 +45,12 @@ exports.getLogin = async (req, res) => {
 		}
 		const match = await bcrypt.compare(password, loginUser.password);
 		if (!match) {
-			return res.status(401).json({ error: "Incorrect password" });
+			return res
+				.status(401)
+				.json({ error: "Incorrect password", status: 401 });
 		}
 
-		const token = jwt.sign({ email }, process.env.TOKEN_SECRET);
+		const token = jwt.sign({ id: loginUser.id }, process.env.TOKEN_SECRET);
 		return res.json({ message: "Login Successful", token });
 	} catch (error) {
 		res.status(500).json({ error: "Internal server error" });

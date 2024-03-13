@@ -6,15 +6,14 @@ exports.varifyToken = async (req, res, next) => {
 		return res.status(401).send("Access denied");
 	}
 	try {
-		const [type, tokenStr] = token.split("");
+		const [type, tokenStr] = token.split(" ");
 		if (type !== "Bearer")
 			return res.status(401).send("Unauthorized request");
 		if (tokenStr === null || !tokenStr)
 			return res.status(401).send("Unauthorized request");
 		const verifiedUser = jwt.verify(tokenStr, process.env.TOKEN_SECRET);
-
 		if (!verifiedUser) return res.status(401).send("Unauthorized request");
-		req.userEmail = verifiedUser.email;
+		req.body.user_id = verifiedUser.payload.id;
 		next();
 	} catch (error) {
 		return res.json(error);
