@@ -2,7 +2,11 @@ const { PrismaClient } = require("@prisma/client");
 const prisma = new PrismaClient();
 
 exports.getExpense = async (req, res) => {
-	const getExpenses = await prisma.expenses.findMany();
+	const getExpenses = await prisma.expenses.findMany({
+		where: {
+			user_id: req.body.user_id,
+		},
+	});
 	return res.json(getExpenses);
 };
 

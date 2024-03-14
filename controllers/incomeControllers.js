@@ -1,13 +1,13 @@
 const { PrismaClient } = require("@prisma/client");
 const prisma = new PrismaClient();
 
-exports.getIncome = async (req, res) => {
-	const newIncome = await prisma.incomes.findMany();
-	return res.json(newIncome);
-};
+// exports.getIncome = async (req, res) => {
+// 	const newIncome = await prisma.incomes.findMany();
+// 	return res.json(newIncome);
+// };
 
 exports.getIncome = async (req, res) => {
-	const newIncome = await prisma.incomes.findUnique({
+	const newIncome = await prisma.incomes.findMany({
 		where: {
 			user_id: req.body.user_id,
 		},

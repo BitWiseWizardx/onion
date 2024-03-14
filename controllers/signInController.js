@@ -18,10 +18,10 @@ exports.createRegister = async (req, res) => {
 			data: { name, email, password: hashedPassword },
 		});
 
-		const payload = {
-			id: createdRegister.id,
-		};
-		const token = jwt.sign({ payload }, process.env.TOKEN_SECRET);
+		const token = jwt.sign(
+			{ id: createdRegister.id },
+			process.env.TOKEN_SECRET
+		);
 		return res.json({
 			message: "Data retrieved successfully",
 			createdRegister,

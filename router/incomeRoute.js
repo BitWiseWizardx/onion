@@ -14,7 +14,7 @@ const { varifyToken } = require("../middleware/varifyToken");
 // router.put("/:id", putIncome);
 // router.delete("/:id", deleteIncome);
 
-router.route("/").get(varifyToken, getIncome).post(postIncome);
+router.route("/").get(varifyToken, getIncome).post(varifyToken, postIncome);
 router.route("/:id").put(putIncome).delete(deleteIncome).get(getOneIncome);
 router.route("/search").post(searchIncome);
 

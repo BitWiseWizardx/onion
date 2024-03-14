@@ -13,7 +13,7 @@ exports.varifyToken = async (req, res, next) => {
 			return res.status(401).send("Unauthorized request");
 		const verifiedUser = jwt.verify(tokenStr, process.env.TOKEN_SECRET);
 		if (!verifiedUser) return res.status(401).send("Unauthorized request");
-		req.body.user_id = verifiedUser.payload.id;
+		req.body.user_id = verifiedUser.id;
 		next();
 	} catch (error) {
 		return res.json(error);
