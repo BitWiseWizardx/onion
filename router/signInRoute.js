@@ -5,7 +5,7 @@ const {
 	createRegister,
 	getLogin,
 	protectedRoute,
-} = require("../controllers/signinController");
+} = require("../controllers/signInController");
 const { varifyToken } = require("../middleware/varifyToken");
 
 router.route("/register").get(getRegister).post(createRegister);
