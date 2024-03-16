@@ -1,0 +1,11 @@
+const { PrismaClient } = require("@prisma/client");
+const prisma = new PrismaClient();
+
+exports.getTotalBalance = async (req, res) => {
+	const totalBalance = await prisma.total_balance.findFirst({
+		where: {
+			user_id: req.body.user_id,
+		},
+	});
+	return res.json(totalBalance);
+};

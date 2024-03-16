@@ -40,3 +40,10 @@ model users {
   expenses   expenses[]
   incomes    incomes[]
 }
+
+model total_balance {
+  id           Int      @id @default(autoincrement())
+  user_id      Int?
+  balance      Decimal? @db.Decimal(10, 2)
+  last_updated DateTime @default(now()) @db.Timestamp(0)
+}
