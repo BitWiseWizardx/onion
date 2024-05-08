@@ -17,16 +17,50 @@ exports.getIncome = async (req, res) => {
 
 exports.postIncome = async (req, res) => {
 	try {
+		// create new income data
 		const data = {
 			user_id: req.body.user_id,
 			description: req.body.description,
 			amount: req.body.amount,
 		};
 		const newData = await prisma.incomes.create({ data: data });
-		return res.json(newData);
+
+		try {
+			// update total balance of the user
+			/**
+			 * Increment the balance of the user by the amount of the income
+			 * that was just created
+			 */
+			const lastTotalBalance= await prisma.total_balance.findUnique({
+				where: {
+					user_id: newData.user_id,
+				}
+			})
+
+			const newBalance = lastTotalBalance.balance + newData.amount
+			const updatedData = await prisma.total_balance.update({
+				where: {
+					user_id: newData.user_id,
+				},
+				data: {
+					balance: newBalance
+				},
+			});
+			return res.json({
+				newData,
+				total_balance: updatedData,
+				message: "Income created successfully",
+			});
+
+		} catch (error) {
+			return res.json(error);
+		}
 	} catch (error) {
 		return res.json(error);
 	}
+
+
+	
 };
 
 exports.putIncome = async (req, res) => {

@@ -31,19 +31,27 @@ model expenses {
 }
 
 model users {
-  id         Int        @id @default(autoincrement())
-  name       String     @db.VarChar(255)
-  email      String     @unique(map: "email") @db.VarChar(255)
-  password   String     @db.VarChar(255)
-  created_at DateTime?  @db.DateTime(0)
-  updated_at DateTime?  @db.DateTime(0)
-  expenses   expenses[]
-  incomes    incomes[]
+  id            Int            @id @default(autoincrement())
+  name          String         @db.VarChar(255)
+  email         String         @unique(map: "email") @db.VarChar(255)
+  password      String         @db.VarChar(255)
+  created_at    DateTime?      @db.DateTime(0)
+  updated_at    DateTime?      @db.DateTime(0)
+  expenses      expenses[]
+  incomes       incomes[]
+  total_balance total_balance?
 }
 
 model total_balance {
-  id           Int      @id @default(autoincrement())
-  user_id      Int?
-  balance      Decimal? @db.Decimal(10, 2)
-  last_updated DateTime @default(now()) @db.Timestamp(0)
+  id         Int       @id @default(autoincrement())
+  user_id    Int       @unique
+  balance    Int
+  users      users?    @relation(fields: [user_id], references: [id])
+  created_at DateTime? @db.DateTime(0)
+  updated_at DateTime? @db.DateTime(0)
+
+  // Foreign key referencing the user table
+
+  // Optional: Customizing the table name if needed
+  @@index([user_id], map: "user_id")
 }

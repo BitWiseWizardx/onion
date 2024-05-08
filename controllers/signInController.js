@@ -1,6 +1,6 @@
 const { PrismaClient } = require("@prisma/client");
 const prisma = new PrismaClient();
-const crypto = require("crypto");
+// const crypto = require("crypto");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 
@@ -14,10 +14,19 @@ exports.createRegister = async (req, res) => {
 		const saltRounds = 10;
 		const { name, email, password } = req.body;
 		const hashedPassword = await bcrypt.hash(password, saltRounds);
+		
+		const user = await prisma.users.findUnique({where: {email}})
+		if(user){
+			return res.json({error: "User already exists"})
+		}
 		const createdRegister = await prisma.users.create({
 			data: { name, email, password: hashedPassword },
 		});
-
+		
+		// create total balance
+		const totalBalance= await prisma.total_balance.create({
+			data: { user_id: createdRegister.id, balance: 0 },
+		})
 		const token = jwt.sign(
 			{ id: createdRegister.id },
 			process.env.TOKEN_SECRET

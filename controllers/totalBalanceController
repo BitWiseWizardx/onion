@@ -9,3 +9,15 @@ exports.getTotalBalance = async (req, res) => {
 	});
 	return res.json(totalBalance);
 };
+
+exports.updateTotalBalance=async (req, res) => {
+	const totalBalance = await prisma.total_balance.update({
+		where: {
+			user_id: req.body.user_id,
+		},
+		data: {
+			balance: req.body.total_balance
+		},
+	});
+	return res.json(totalBalance);	
+}
